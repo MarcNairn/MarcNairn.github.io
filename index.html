@@ -200,7 +200,55 @@
         <li><strong>Research Assistant</strong>, <a href="https://www.aalto.fi/en/department-of-applied-physics/correlated-quantum-materials-cqm-0" target="_blank">Aalto University (Correlated Quantum Materials group)</a>, Summer 2022</li>
     </ul>
 </section>
+<!-- Chess Section -->
+<section id="chess" class="section">
+    <h2>Chess</h2>
+    <p>
+        In addition to my work in theoretical physics, I am passionate about chess and enjoy studying the strategies of historical games. Below is a replay of a famous miniature game played between Bobby Fischer and Boris Spassky during the World Chess Championship in 1972.
+    </p>
+    <div id="chess-board" style="margin: auto;"></div>
+    <p>
+        <strong>Game:</strong> Fischer vs. Spassky, Reykjavik 1972<br>
+        <strong>Result:</strong> 1-0 (Queen Sacrifice!)
+    </p>
+</section>
 
+<!-- Include the Chessboard.js script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.11.0/chess.min.js"></script>
+<script>
+    const game = new Chess();
+    const board = Chessboard('chess-board', {
+        draggable: false,
+        position: 'start',
+    });
+
+    // Load Fischer-Spassky 1972 miniature moves
+    const moves = [
+        'e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6',
+        'O-O', 'Be7', 'Re1', 'b5', 'Bb3', 'd6', 'c3', 'O-O',
+        'h3', 'Nb8', 'd4', 'Nbd7', 'Nbd2', 'Bb7', 'Bc2', 'Re8',
+        'Nf1', 'Bf8', 'Ng3', 'g6', 'Bg5', 'h6', 'Bd2', 'Bg7',
+        'Qe2', 'c5', 'dxe5', 'dxe5', 'Rad1', 'Qc7', 'Nh4', 'c4',
+        'Nhf5', 'gxf5', 'Nxf5', 'Kh7', 'Qe3', 'Ng8', 'Qg3', 'Bf6',
+        'f4', 'Rad8', 'fxe5', 'Rxe5', 'Bf4', 'Rde8', 'Rd6', 'Re6',
+        'Rxe6', 'Qxe6', 'e5', 'Bh8', 'Nd6', 'Ba8', 'Nf5', 'Qd5',
+        'Ne7', 'Qd7', 'Qh4', 'h5', 'Qxh5', 'Nxe7', 'Qxh8+', 'Kxh8',
+        'Bxe7', 'Qg8', 'Bf6+', 'Kh7', 'Rd1', 'Qxg2#'
+    ];
+
+    let index = 0;
+    function playGame() {
+        if (index < moves.length) {
+            game.move(moves[index]);
+            board.position(game.fen());
+            index++;
+            setTimeout(playGame, 800); // Adjust timing as desired
+        }
+    }
+
+    playGame();
+</script>
     <!-- Contact Section -->
     <section id="contact" class="section">
         <h2>Contact</h2>
