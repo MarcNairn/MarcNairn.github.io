@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marc's Travels</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        h1, h2 {
+            color: #343a40;
+        }
+        p {
+            color: #555;
+        }
+
+        /* Header */
+        header {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 2em 1em;
+            border-bottom: 2px solid #dee2e6;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.2em;
+        }
+        header p {
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+
+        /* Main Content Section */
+        .content {
+            padding: 2em;
+            max-width: 800px;
+            margin: 2em auto;
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .content h2 {
+            margin-bottom: 1em;
+            font-size: 1.8em;
+            border-bottom: 2px solid #007bff;
+            display: inline-block;
+        }
+        .content ul {
+            list-style-type: disc;
+            margin-left: 2em;
+        }
+        .content ul li {
+            margin-bottom: 0.8em;
+        }
+
+        /* Map Section */
+        .map {
+            margin-top: 2em;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            height: 450px;
+            border: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5em 0;
+            background-color: #f1f3f5;
+            color: #6c757d;
+            margin-top: 3em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Marc's Travels</h1>
+        <p>Discover the unique places I've explored around the world</p>
+    </header>
+
+    <!-- Travel Content -->
+    <div class="content">
+        <h2>My Favorite Destinations</h2>
+        <p>
+            Traveling is one of my passions. Here are a few of the places I’ve been fortunate to visit and why they stood out to me:
+        </p>
+        <ul>
+            <li><strong>Iceland</strong>: Witnessing the ethereal beauty of the Northern Lights and exploring volcanic landscapes.</li>
+            <li><strong>Japan</strong>: Immersing myself in the blend of tradition and modernity, from Kyoto's temples to Tokyo's neon lights.</li>
+            <li><strong>Patagonia</strong>: Hiking through breathtaking mountain trails and marveling at pristine glaciers.</li>
+        </ul>
+        <p>
+            Each of these destinations holds a special place in my heart, offering unique experiences and memories that I’ll treasure forever.
+        </p>
+
+        <!-- Embedded Google Map -->
+        <div class="map">
+            <h2>Explore My Travel Map</h2>
+            <iframe 
+            src="https://www.google.com/maps/d/embed?mid=1mNK2HrH2zqKGCFJ3DrrvSAC1Ao-nml8&ehbc=2E312F&noprof=1" width="640" height="480"
+            allowfullscreen="" 
+            loading="lazy">
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Marc Nairn-Antolin | Travel Adventures</p>
+    </footer>
+</body>
+</html>
