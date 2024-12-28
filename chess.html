@@ -10,9 +10,10 @@
         body {
             font-family: 'Roboto', sans-serif;
             line-height: 1.6;
-            background-color: #ffffff;
+            background-color: #f4f4f4;
             color: #333;
             padding: 20px;
+            text-align: center; /* Center all text */
         }
         h1, h2 {
             color: #606060;
@@ -25,9 +26,13 @@
             padding: 10px;
             border: 1px solid #ccc;
             overflow-x: auto;
+            display: inline-block; /* Allow pre to behave like inline element */
+            text-align: left; /* Keep code aligned to the left inside the pre block */
         }
         ul {
             margin: 10px 0;
+            text-align: left; /* Keep list items left aligned */
+            display: inline-block; /* Allow lists to behave like inline elements */
         }
         li {
             margin-bottom: 5px;
