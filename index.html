@@ -1,7 +1,695 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Marc Nairn-Antolín | Theoretical Quantum Optics</title>
+
+    <!-- keep original dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* -------------------------
+           Theme variables
+           ------------------------- */
+        :root{
+            --bg-0: #071226;
+            --bg-1: #0b2540;
+            --card: rgba(255,255,255,0.03);
+            --glass: rgba(255,255,255,0.04);
+            --muted: #9fb6d0;
+            --primary: #61b6e6;     /* azure */
+            --accent: #8e6ad5;      /* violet accent */
+            --gold: #f0b429;
+            --white: #ffffff;
+            --dark: #0b1220;        /* for light-background text */
+            --radius: 14px;
+            --shadow-1: 0 8px 30px rgba(2,8,23,0.7);
+            --focus: 3px rgba(97,182,230,0.15);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+
+            --text-light: #e9f1fb;
+            --text-muted-light: rgba(233,241,251,0.9);
+            --text-dark: #0b1220;
+            --muted-dark: #374151;
+        }
+
+        /* -------------------------
+           Base page styles
+           ------------------------- */
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family: "Segoe UI", Roboto, -apple-system, "Helvetica Neue", Arial;
+            color: var(--text-light);
+            background:
+                radial-gradient(1200px 600px at 10% 10%, rgba(142,106,213,0.06), transparent 8%),
+                radial-gradient(900px 500px at 85% 85%, rgba(97,182,230,0.04), transparent 8%),
+                linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height:1.55;
+        }
+
+        .container { max-width:1100px; }
+
+        /* -------------------------
+           Navbar
+           ------------------------- */
+        .navbar {
+            background: linear-gradient(90deg, rgba(11,37,64,0.9), rgba(9,20,36,0.95));
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+            padding: 0.6rem 1rem;
+        }
+        .navbar-brand{
+            font-weight:700;
+            letter-spacing:0.4px;
+            color: var(--white) !important;
+            text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+        }
+        .nav-link{
+            color: var(--muted) !important;
+            font-weight:600;
+            transition: color .18s ease, transform .18s ease;
+        }
+        .nav-link:hover, .nav-link:focus{
+            color: var(--primary) !important;
+            transform: translateY(-2px);
+            text-decoration:none;
+        }
+        .navbar-toggler { border: none; }
+
+        /* -------------------------
+           HERO: richer animated background (non-solid)
+           ------------------------- */
+        .hero-section{
+            padding: 110px 0 80px 0;
+            margin-bottom: 46px;
+            position: relative;
+            overflow: hidden;
+            color: var(--text-light);
+        }
+
+        /* moving soft blobs (large radial gradients) */
+        .hero-section::before{
+            content: "";
+            position: absolute;
+            inset: -30% -10% auto -10%;
+            height: 220%;
+            background:
+                radial-gradient(600px 300px at 10% 30%, rgba(97,182,230,0.14), transparent 12%),
+                radial-gradient(400px 220px at 80% 10%, rgba(142,106,213,0.08), transparent 12%),
+                radial-gradient(420px 260px at 60% 85%, rgba(255,182,115,0.03), transparent 12%);
+            filter: blur(40px) saturate(1.05);
+            transform: rotate(-6deg);
+            pointer-events: none;
+            animation: blobDrift 14s linear infinite alternate;
+            mix-blend-mode: screen;
+            opacity: 0.95;
+        }
+        @keyframes blobDrift{
+            from{ transform: translateY(-12px) rotate(-6deg) scale(1); }
+            to{ transform: translateY(12px) rotate(-4deg) scale(1.02); }
+        }
+
+        /* faint animated grid overlay to add subtle texture */
+        .hero-section::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background-image:
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 110px 110px;
+            mix-blend-mode: overlay;
+            animation: gridShift 22s linear infinite;
+            pointer-events:none;
+            opacity: 0.25;
+        }
+        @keyframes gridShift{
+            from{ background-position: 0 0, 0 0; }
+            to{ background-position: 80px 40px, -40px -80px; }
+        }
+
+        h1{
+            font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+            margin: .1rem 0 .25rem 0;
+            font-weight:800;
+            color: var(--text-light);
+            letter-spacing: -0.5px;
+            text-shadow: 0 6px 24px rgba(2,8,23,0.6);
+        }
+        h3{
+            font-weight:600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .lead{
+            color: var(--text-muted-light);
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+        }
+
+        .hero-badge{
+            display:inline-block;
+            margin: 6px 8px 6px 0;
+            padding: 8px 14px;
+            font-size: .9rem;
+            border-radius: 999px;
+            color: var(--text-light);
+            background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.03);
+            box-shadow: 0 6px 20px rgba(2,8,23,0.45);
+            transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms;
+            cursor:default;
+        }
+        .hero-badge:hover{ transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 40px rgba(2,8,23,0.6); }
+
+        /* -------------------------
+           Section titles
+           ------------------------- */
+        .section-title{
+            font-size:1.5rem;
+            font-weight:700;
+            color: var(--text-light);
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.6rem;
+        }
+        .section-title::after{
+            content: "";
+            position: absolute;
+            left:0;
+            bottom: 0;
+            width: 64px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            box-shadow: 0 4px 18px rgba(97,182,230,0.12);
+        }
+
+        /* -------------------------
+           Cards
+           ------------------------- */
+        .card{
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-1);
+            transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s;
+        }
+        .card:hover{
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(2,8,23,0.72);
+        }
+        .card .card-body h5{ color: var(--text-light); font-weight:700; }
+        .card .card-body p{ color: var(--text-muted-light) }
+
+        /* research icons */
+        .research-icon { font-size: 2.3rem; color: var(--primary); display:inline-block; margin-bottom:12px; transition: transform .24s ease, color .24s ease; }
+        .research-card:hover .research-icon { transform: rotate(-8deg) scale(1.06); color: var(--accent); }
+
+        /* -------------------------
+           Publications & timeline
+           ------------------------- */
+        .publication-item{
+            border-left: 4px solid rgba(97,182,230,0.14);
+            padding-left: 16px;
+            margin-bottom: 26px;
+            transition: border-color .2s;
+        }
+        .publication-item:hover{ border-left-color: var(--primary); }
+        .publication-item h5{ color: var(--text-light); margin-bottom:.25rem; font-weight:800; }
+        .publication-item p{ color: var(--muted); margin-bottom: .4rem; }
+
+        .abstract{
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 16px;
+            border-radius: 10px;
+            color: rgba(225,235,245,0.95);
+            font-size: .95rem;
+            line-height:1.45;
+            box-shadow: 0 8px 30px rgba(2,8,23,0.55);
+        }
+
+        .btn-outline-primary{
+            color: var(--primary);
+            border-color: rgba(97,182,230,0.12);
+            background: transparent;
+            transition: all .18s;
+        }
+        .btn-outline-primary:hover{
+            color: #042028;
+            background: linear-gradient(90deg, var(--primary), #7cdcf0);
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+        .btn-primary{
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border: none;
+            box-shadow: 0 8px 28px rgba(97,182,230,0.12);
+        }
+
+        /* timeline vertical line */
+        .timeline{ position: relative; padding-left: 36px; }
+        .timeline::before{
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(97,182,230,0.16), rgba(142,106,213,0.12));
+        }
+        .timeline-item{ margin-bottom: 30px; position: relative; padding-left: 20px; }
+        .timeline-item::before{
+            content: "";
+            position: absolute;
+            left: -2px;
+            top: 6px;
+            width: 14px; height:14px;
+            border-radius:50%;
+            background: radial-gradient(circle at 30% 30%, var(--white), rgba(255,255,255,0.85) 10%, rgba(97,182,230,0.12) 30%);
+            box-shadow: 0 6px 20px rgba(97,182,230,0.08), 0 1px 0 rgba(0,0,0,0.6) inset;
+        }
+        .timeline-date{ font-weight:700; color: var(--primary); }
+
+        /* contact lists, links etc */
+        .contact-info li{ color: var(--muted); margin-bottom:.6rem; }
+        .list-unstyled a{ color: var(--muted); transition: color .16s; }
+        .list-unstyled a:hover{ color: var(--primary); text-decoration:none; }
+
+        /* accessible focus */
+        a:focus, button:focus, .nav-link:focus {
+            outline: none;
+            box-shadow: 0 0 0 var(--focus);
+            border-radius: 6px;
+        }
+
+        /* -------------------------
+           Fix: sections that use bootstrap's bg-light (light backgrounds)
+           Ensure text there is dark (avoid white-on-white)
+           ------------------------- */
+        /* These rules force dark text and darker metadata/buttons inside any area with .bg-light */
+        .bg-light,
+        section.bg-light,
+        .bg-light * {
+            color: var(--text-dark) !important;
+        }
+
+        /* Cards inside light sections become light-styled (white background, dark text) */
+        .bg-light .card {
+            background: #ffffff !important;
+            border-color: rgba(11,20,30,0.06) !important;
+            box-shadow: 0 8px 24px rgba(2,8,23,0.04) !important;
+        }
+        .bg-light .card .card-body h5 { color: var(--text-dark) !important; }
+        .bg-light .card .card-body p { color: var(--muted-dark) !important; }
+
+        /* Abstracts on light backgrounds */
+        .bg-light .abstract {
+            background: #ffffff !important;
+            border-color: rgba(11,20,30,0.06) !important;
+            color: var(--text-dark) !important;
+            box-shadow: 0 8px 30px rgba(2,8,23,0.04) !important;
+        }
+
+        /* Section title color for light areas */
+        .bg-light .section-title {
+            color: var(--text-dark) !important;
+        }
+
+        /* Publication headings and metadata in light contexts */
+        .bg-light .publication-item h5 { color: var(--text-dark) !important; }
+        .bg-light .publication-item p { color: var(--muted-dark) !important; }
+
+        /* Buttons contrast inside light contexts */
+        .bg-light .btn-outline-primary { color: var(--text-dark) !important; border-color: rgba(11,20,30,0.06) !important; }
+        .bg-light .btn-primary { color: #fff !important; }
+
+        /* Links in light contexts */
+        .bg-light a { color: var(--primary) !important; }
+
+        /* small screens adjustments */
+        @media (max-width: 767px){
+            .hero-section{ padding: 70px 0 46px 0; margin-bottom: 28px; }
+            .hero-badge{ margin-bottom:8px; }
+            .card{ border-radius: 12px; }
+        }
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Marc Nairn-Antolín</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#research">Research</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#education">Education</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#positions">Research Stays</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#publications">Publications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#other-work">Other Work</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1>Marc Nairn-Antolín</h1>
+                    <h3 class="mb-4">PhD Candidate </h3>
+                    <p class="lead mb-4">Many-body quantum optics and cavity QED</p>
+                    <div class="mt-4">
+                        <span class="hero-badge">Collective Quantum Effects</span>
+                        <span class="hero-badge">Rydberg Atom Quantum Gates</span>
+                        <span class="hero-badge">Competing Interactions</span>
+                        <span class="hero-badge">Non-Reciprocal Phenomena</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>I am a PhD candidate in Theoretical Quantum Optics, specializing in many body interacting systems, quantum information processing with Rydberg atoms, and engineered quantum systems.</p>
+                    <p>My research combines analytical approaches with numerical tools to explore fundamental questions in open quantum systems with potential applications in quantum computing, quantum simulation and quantum devices.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Research Interests</h5>
+                            <ul>
+                                <li>Beyond superradiance in cavity QED</li>
+                                <li>Many body quantum gates with Rydberg atoms</li>
+                                <li>Frustrated order in collective open quantum systems</li>
+                                <li>Quantum optical non reciprocal phenomena</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research" class="py-5 bg-light" style="background: transparent;">
+        <div class="container">
+            <h2 class="section-title">Research Areas</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card research-card">
+                        <div class="card-body">
+                            <div class="research-icon">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <h5 class="card-title">Collective Effects in Quantum Optics</h5>
+                            <p class="card-text">When many atoms are coupled to a common electromagnetic field they can behave cooperatively and show geometric order, with applications ranging from quantum simulation of many body physics to sensing</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card research-card">
+                        <div class="card-body">
+                            <div class="research-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <h5 class="card-title">Quantum Gates with Rydberg Atoms</h5>
+                            <p class="card-text">Thanks to their strongly interacting nature Rydberg atoms are a promising and robust platform to perform quantum computation with; I am exploring routes to devise many-body gates with Rydberg atoms in a waveguide.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card research-card">
+                        <div class="card-body">
+                            <div class="research-icon">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <h5 class="card-title">Competing Ranged Interactions</h5>
+                            <p class="card-text">Competition between differently ranged forces leads to exotic phases of matter, I am interested in exploring how all-to-all coupled systems can be altered by on site magnetism</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card research-card">
+                        <div class="card-body">
+                            <div class="research-icon">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <h5 class="card-title">Non-Reciprocal Quantum Devices</h5>
+                            <p class="card-text">When two or more distinct quantum systems interact through a shared mode, their interaction may be shielded in one direction thanks to the properties of open quantum systems; I am interested in exploring these ideas on many body spin systems</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Education</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>PhD in Theoretical Quantum Optics</h4>
+                    <div class="timeline-date">Fall 2022 - Present</div>
+                    <p><strong>University of Tübingen</strong></p>
+                    <p>Thesis: "Collective and competing effects in Many-Body Quantum Optics"</p>
+                    <p>Advisor: Beatriz Olmos</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>MSci in Theoretical Physics</h4>
+                    <div class="timeline-date">2021 - 2022</div>
+                    <p><strong>University of Glasgow</strong></p>
+                    <p>Thesis: "Generating non-gaussian states in a multimode Kerr cavity"</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>BSc in Physics</h4>
+                    <div class="timeline-date">2017 - 2021</div>
+                    <p><strong>University of Glasgow</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Stays Section -->
+    <section id="positions" class="py-5 bg-light" style="background: transparent;">
+        <div class="container">
+            <h2 class="section-title">Research Stays</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Research Intern</h4>
+                    <div class="timeline-date">Summer 2022</div>
+                    <p><strong>Aalto University</strong> - Correlated Quantum Materials</p>
+                    <p>Tensor network simulations and quantum computing topological invariants in 2D materials</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Research Intern</h4>
+                    <div class="timeline-date">Summer 2021</div>
+                    <p><strong>University of Vienna</strong> - Quantum Imaging Group</p>
+                    <p>Early setup work on an Optical Near Field Electron Microscope</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Short Research Stay</h4>
+                    <div class="timeline-date">July 2023</div>
+                    <p><strong>Saarland University</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Publications</h2>
+
+            <!-- Publication 1 -->
+            <div class="publication-item">
+                <h5>Spin self-organization in an optical cavity facilitated by inhomogeneous broadening</h5>
+                <p><strong>MN</strong>, L Giannelli, G Morigi, S Slama, B Olmos, SB Jäger</p>
+                <p><em>Phys. Rev. Lett.</em> 134 (8), 083603 (2025)</p>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#abstract1" aria-expanded="false" aria-controls="abstract1">
+                    Show Abstract
+                </button>
+                <a href="https://arxiv.org/pdf/2407.19706" class="btn btn-sm btn-primary" target="_blank" rel="noopener">
+                    <i class="fas fa-external-link-alt"></i> arXiv
+                </a>
+                <div class="collapse mt-2" id="abstract1">
+                    <div class="abstract">
+                        We study the onset of collective spin self-organization in a thermal ensemble of driven two-level atoms confined in an optical cavity. The atoms spontaneously form a spin pattern above a critical driving strength that sets a threshold and is determined by the cavity parameters, the initial temperature, and the transition frequency of the atomic spin. Remarkably, we find that inhomogeneous Doppler broadening facilitates the onset of spin self-organization. In particular, the threshold is nonmonotonic when increasing the spin transition frequency and reaches a minimum when the Doppler broadening is of similar magnitude. This feature emerges due to Doppler-induced resonances. Above the threshold, we find cooperative dynamics of spin, spatial, and momentum degrees of freedom leading to density modulations, fast reduction of kinetic energy, and the emergence of nonthermal states. More broadly, our work demonstrates how broadening can facilitate strong light-matter interactions in many-body systems.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Publication 2 -->
+            <div class="publication-item">
+                <h5>Quantum computing topological invariants of two-dimensional quantum matter</h5>
+                <p>M. Niedermeier, <strong>MN</strong>, C. Flindt, J.L. Lado</p>
+                <p><em>Phys. Rev. Research</em> 6 (4), 043288 ([2024])</p>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#abstract2" aria-expanded="false" aria-controls="abstract2">
+                    Show Abstract
+                </button>
+                <a href="https://arxiv.org/pdf/2404.06048" class="btn btn-sm btn-primary" target="_blank" rel="noopener">
+                    <i class="fas fa-external-link-alt"></i> arXiv
+                </a>
+                <div class="collapse mt-2" id="abstract2">
+                    <div class="abstract">
+                        Quantum algorithms provide a potential strategy for solving computational problems that are intractable by classical means. Computing the topological invariants of topological matter is one central problem in research on quantum materials, and a variety of numerical approaches for this purpose have been developed. However, the complexity of quantum many-body Hamiltonians makes calculations of topological invariants challenging for interacting systems. Here, we present two quantum circuits for calculating Chern numbers of two-dimensional quantum matter on quantum computers. Both circuits combine a gate-based adiabatic time evolution over thediscretized Brillouin zone with particular phase estimation techniques. The first algorithm uses many qubits, and we analyze it using a tensor-network simulator of quantum circuits. The second circuit uses fewer qubits, and we implement it experimentally on a quantum computer based on superconducting qubits. Our results establish a method for computing topological invariants with quantum circuits, taking a step towards characterizing interacting topological quantum matter using quantum computers.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Publication 3 -->
+            <div class="publication-item">
+                <h5>Non-stationary states via phase-engineered strong symmetries</h5>
+                <p><strong>MN</strong>, B. Olmos, P. Solanki</p>
+                <p><em>(in preparation)</em></p>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#abstract3" aria-expanded="false" aria-controls="abstract3">
+                    Show Abstract
+                </button>
+                <a href="[arXiv link]" class="btn btn-sm btn-primary" target="_blank" rel="noopener">
+                    <i class="fas fa-external-link-alt"></i> arXiv
+                </a>
+                <div class="collapse mt-2" id="abstract3">
+                    <div class="abstract">
+Open quantum systems with symmetry-protected dynamics offer a powerful platform for controlling
+decoherence and enhance collective behavior. Central to this is the manipulation of relative phases
+between system components. This work demonstrates that a tunable phase parameter embedded
+in the light-matter coupling of a cavity QED system provides dynamic control over open quantum
+dynamics by generating a phase-dependent strong symmetry with tuneable initial state’s overlap
+with bright and dark states. This mechanism drastically lowers the critical driving strength for
+time-crystalline order and can even restore persistent oscillations in typically inaccessible parameter
+regimes. Additionally, in a collective three-level system, phase control reveals a rich landscape of
+dynamical multistability. This work shows that it is possible to steer populations between protected
+dark states and actively driven bright states by means of a tunable phase-dependent strong symmetry,
+offering new and intriguing possibilities for quantum state preparation and information processing.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="other-work" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Other work</h2>
+
+            <!-- Publication 1 -->
+            <div class="publication-item">
+                <h5>Superoscillations: Realisation of quantum weak values</h5>
+                <p><strong>MN</strong></p>
+                <p><em>arXiv</em>:2109.14404</p>
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#abstract4" aria-expanded="false" aria-controls="abstract4">
+                    Show Abstract
+                </button>
+                <a href="https://arxiv.org/pdf/2407.19706" class="btn btn-sm btn-primary" target="_blank" rel="noopener">
+                    <i class="fas fa-external-link-alt"></i> arXiv
+                </a>
+                <div class="collapse mt-2" id="abstract4">
+                    <div class="abstract">
+        Superoscillations are band-limited functions with the peculiar characteristic that they can oscillate with a frequency arbitrarily faster than their fastest Fourier component. First anticipated in different contexts, such as optics or radar physics, superoscillations have recently garnered renewed interest after more modern studies have successfully linked their properties to a novel quantum measurement theory, the weak value scheme. Under this framework, superoscillations have quickly developed into a fruitful area of mathematical study whose applications have evolved from the theoretical to the practical world. Their mathematical understanding, though still incomplete, recognises such oscillations will only arise in regions where the function is extremely small, establishing an inherent limitation to their applicability. This paper aims to provide a detailed look into the current state of research, both theoretical and practical, on the topic of superoscillations, as well as introducing the two-state vector formalism under which the weak value scheme may be realised.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 bg-light" style="background: transparent;">
+        <div class="container">
+            <h2 class="section-title">Contact</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Get In Touch</h5>
+                            <ul class="list-unstyled contact-info">
+                                <li><i class="fas fa-envelope"></i> marc.nairn[at]uni.tuebingen.de</li>
+                                <li><i class="fas fa-building"></i> Theoretical Atomic Physics and Synthetic Quantum Systems<br>
+                                    University of Tübingen<br>
+                                    Auf der Morgenstelle 14, 72076 Tübingen, Germany</li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Links</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="https://orcid.org/0000-0003-1577-5338" target="_blank" rel="noopener"><i class="fab fa-orcid"></i> ORCID</a></li>
+                                <li><a href="https://scholar.google.com/citations?user=SgAjjBgAAAAJ&hl=en&oi=ao" target="_blank" rel="noopener"><i class="fas fa-graduation-cap"></i> Google Scholar</a></li>
+                                <li><a href="https://www.linkedin.com/in/marcnairn/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                                <li><a href="https://github.com/MarcNairn" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-4">
+        <div class="container">
+            <p>&copy; 2025 Marc Nairn-Antolín. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- keep original bootstrap script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Small enhancement: collapse button text toggle for clarity (UI-only)
+        document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // no content changes — only visual toggle of the button label
+                const target = btn.getAttribute('data-bs-target');
+                const el = document.querySelector(target);
+                if (!el) return;
+                // using aria-expanded to decide
+                const expanded = btn.getAttribute('aria-expanded') === 'true';
+                btn.setAttribute('aria-expanded', (!expanded).toString());
+            });
+        });
+
+        // Respect reduced motion preference
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(prefersReduced){
+            document.querySelectorAll('*').forEach(el => el.style.transitionDuration = '0s');
+        }
+    </script>
 </body>
 </html>
